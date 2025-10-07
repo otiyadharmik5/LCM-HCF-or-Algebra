@@ -1,0 +1,13 @@
+<?php
+// simple endpoint to accept POST score submissions (for demo only)
+// Usage: POST to submit_score.php with 'game' and 'score' fields.
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $game = isset($_POST['game']) ? $_POST['game'] : 'unknown';
+    $score = isset($_POST['score']) ? $_POST['score'] : '0';
+    $line = date('Y-m-d H:i:s') . " | Game: $game | Score: $score\n";
+    file_put_contents('submissions.txt', $line, FILE_APPEND);
+    echo json_encode(['status'=>'ok','message'=>'saved']);
+} else {
+    echo json_encode(['status'=>'error','message'=>'only POST allowed']);
+}
+?>
