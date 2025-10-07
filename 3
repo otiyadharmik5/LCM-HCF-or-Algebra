@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Algebra Balance Game - Math Games</title>
+<link rel="stylesheet" href="../common/style.css">
+</head>
+<body>
+<div class="container">
+  <h1>⚖️ Algebra Balance — Balance the Equation</h1>
+  <p class="small">Find the value of x using simple balance ideas. Example: x + 3 = 7</p>
+  <div class="controls">
+    <select id="eq">
+      <option value="x+3=7">x + 3 = 7</option>
+      <option value="2x+1=9">2x + 1 = 9</option>
+      <option value="x-4=2">x - 4 = 2</option>
+      <option value="3x=12">3x = 12</option>
+    </select>
+    <button class="btn" id="load">Load</button>
+    <button class="btn secondary" id="hint">Hint</button>
+  </div>
+  <div class="card" id="balanceArea">
+    <div id="equation" style="font-size:20px;font-weight:700"></div>
+    <div style="margin-top:12px">
+      <label>Your answer: </label>
+      <input id="ans" type="number" />
+      <button class="btn" id="check">Check</button>
+    </div>
+    <div id="feedback" class="result"></div>
+  </div>
+  <div class="footer">This helps kids build an intuition for balancing equations.</div>
+</div>
+
+<script>
+function solve(eq){
+  if(eq==='x+3=7') return 4;
+  if(eq==='2x+1=9') return 4;
+  if(eq==='x-4=2') return 6;
+  if(eq==='3x=12') return 4;
+  return null;
+}
+
+document.getElementById('load').addEventListener('click', ()=>{
+  const eq = document.getElementById('eq').value;
+  document.getElementById('equation').textContent = eq.replace('x','⚪︎ (x)');
+  document.getElementById('feedback').textContent='';
+  document.getElementById('ans').value='';
+});
+
+document.getElementById('check').addEventListener('click', ()=>{
+  const eq = document.getElementById('eq').value;
+  const correct = solve(eq);
+  const given = parseFloat(document.getElementById('ans').value);
+  const fb = document.getElementById('feedback');
+  if(Number.isNaN(given)){
+    fb.textContent = 'Please enter an answer.'; fb.style.color='#ef4444'; return;
+  }
+  if(Math.abs(given - correct) < 1e-9){
+    fb.textContent = '✔️ Correct! x = ' + correct; fb.style.color='#16a34a';
+  } else {
+    fb.textContent = '✖️ Not quite. Try again.'; fb.style.color='#ef4444';
+  }
+});
+
+document.getElementById('hint').addEventListener('click', ()=>{
+  const eq = document.getElementById('eq').value;
+  const fb = document.getElementById('feedback');
+  if(eq==='x+3=7') fb.textContent = 'Hint: subtract 3 from both sides.';
+  else if(eq==='2x+1=9') fb.textContent = 'Hint: subtract 1, then divide by 2.';
+  else if(eq==='x-4=2') fb.textContent = 'Hint: add 4 to both sides.';
+  else if(eq==='3x=12') fb.textContent = 'Hint: divide 12 by 3.';
+  fb.style.color='#0ea5e9';
+});
+</script>
+</body>
+</html>
