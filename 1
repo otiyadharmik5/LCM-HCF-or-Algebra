@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LCM Game - Math Games</title>
+<link rel="stylesheet" href="../common/style.css">
+</head>
+<body>
+<div class="container">
+  <h1>🎯 LCM Game — Find the Least Common Multiple</h1>
+  <p class="small">Choose two numbers and press 'Start' to see their multiples and spot the LCM.</p>
+  <div class="controls">
+    <input id="a" type="number" value="4" min="1" />
+    <input id="b" type="number" value="6" min="1" />
+    <button class="btn" id="start">Start</button>
+    <button class="btn secondary" id="auto">Random</button>
+  </div>
+  <div class="card" id="board">
+    <div id="seqA"><strong>A:</strong> <span></span></div>
+    <div id="seqB"><strong>B:</strong> <span></span></div>
+    <div class="result" id="result"></div>
+  </div>
+  <div class="footer">Tip: Add colorful animations for kids to make it more engaging.</div>
+</div>
+
+<script>
+function multiples(n, limit=12){
+  const res=[];
+  for(let i=1;i<=limit;i++) res.push(n*i);
+  return res;
+}
+
+function animateSequences(a,b){
+  const seqA = multiples(a,12);
+  const seqB = multiples(b,12);
+  const elA = document.querySelector('#seqA span');
+  const elB = document.querySelector('#seqB span');
+  const resEl = document.getElementById('result');
+  elA.textContent='';
+  elB.textContent='';
+  resEl.textContent='';
+  let i=0,j=0;
+  const step = ()=>{
+    elA.textContent = seqA.slice(0,i+1).join(', ');
+    elB.textContent = seqB.slice(0,j+1).join(', ');
+    const common = seqA.slice(0,i+1).filter(x=>seqB.slice(0,j+1).includes(x));
+    if(common.length){
+      resEl.textContent = '🎉 LCM = ' + common[0];
+      resEl.style.color = '#16a34a';
+      return;
+    }
+    i++; j++;
+    if(i>=seqA.length || j>=seqB.length){
+      const computed = lcm(a,b);
+      resEl.textContent = '✨ LCM = ' + computed + ' (calculated)';
+      resEl.style.color = '#ea580c';
+      return;
+    }
+    setTimeout(step,500);
+  };
+  step();
+}
+
+function gcd(x,y){
+  x=Math.abs(x);y=Math.abs(y);
+  while(y){const t=x%y; x=y; y=t;}
+  return x;
+}
+function lcm(x,y){ if(x===0||y===0) return 0; return Math.abs(x*y)/gcd(x,y); }
+
+document.getElementById('start').addEventListener('click',()=>{
+  const a = parseInt(document.getElementById('a').value) || 1;
+  const b = parseInt(document.getElementById('b').value) || 1;
+  animateSequences(a,b);
+});
+
+document.getElementById('auto').addEventListener('click',()=>{
+  const a = Math.floor(Math.random()*12)+2;
+  const b = Math.floor(Math.random()*12)+2;
+  document.getElementById('a').value=a;
+  document.getElementById('b').value=b;
+  document.getElementById('start').click();
+});
+</script>
+</body>
+</html>
